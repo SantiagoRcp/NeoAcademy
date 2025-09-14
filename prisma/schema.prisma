@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// =========================
+// ENUMS
+// =========================
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+// =========================
+// MODELS
+// =========================
+model Role {
+  id          Int    @id @default(autoincrement())
+  role        String
+  description String
+  User        User[]
+
+  @@map("Roles")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String    @unique
+  password  String
+  avatarUrl String?
+  roleId    Int
+  role      Role      @relation(fields: [roleId], references: [id])
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Student   Student[]
+  Teacher   Teacher[]
+
+  @@map("Users")
+}
+
+model Student {
+  id             Int              @id @default(autoincrement())
+  userId         Int
+  user           User             @relation(fields: [userId], references: [id])
+  dateOfBirth    DateTime
+  phone          String
+  address        String
+  enrollmentDate DateTime
+  status         Status           @default(ACTIVE)
+  Registration   Registration[]
+  TaskSubmission TaskSubmission[]
+
+  @@map("Students")
+}
+
+model Teacher {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  specialization  String
+  bio             String?
+  experienceYears Int
+  phone           String
+  linkedinUrl     String?
+  status          Status   @default(ACTIVE)
+  hiredAt         DateTime
+  course          Course[]
+
+  @@map("Teachers")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Course      Course[]
+
+  @@map("Categories")
+}
+
+model Course {
+  id           Int            @id @default(autoincrement())
+  title        String
+  description  String?
+  price        Float
+  teacherId    Int
+  teacher      Teacher        @relation(fields: [teacherId], references: [id])
+  categoryId   Int
+  category     Category       @relation(fields: [categoryId], references: [id])
+  lesson       Lesson[]
+  Registration Registration[]
+  Task         Task[]
+  createdAt    DateTime
+  updatedAt    DateTime       @updatedAt
+
+  @@map("Courses")
+}
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  order     Int
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Task      Task[]
+
+  @@map("Lessons")
+}
+
+model Registration {
+  id               Int           @id @default(autoincrement())
+  studentId        Int
+  student          Student       @relation(fields: [studentId], references: [id])
+  courseId         Int
+  course           Course        @relation(fields: [courseId], references: [id])
+  paymentStatus    PaymentStatus @default(PENDING)
+  status           Status        @default(ACTIVE)
+  registrationDate DateTime      @default(now())
+
+  @@map("Registrations")
+}
+
+model Task {
+  id             Int              @id @default(autoincrement())
+  courseId       Int
+  course         Course           @relation(fields: [courseId], references: [id])
+  lessonId       Int
+  lesson         Lesson           @relation(fields: [lessonId], references: [id])
+  title          String
+  description    String?
+  dueDate        DateTime
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  TaskSubmission TaskSubmission[]
+
+  @@map("Tasks")
+}
+
+model TaskSubmission {
+  id            Int      @id @default(autoincrement())
+  taskId        Int
+  task          Task     @relation(fields: [taskId], references: [id])
+  studentId     Int
+  student       Student  @relation(fields: [studentId], references: [id])
+  submissionUrl String
+  submittedAt   DateTime @default(now())
+  grade         Float?
+  feedback      String?
+
+  @@map("TaskSubmissions")
+}

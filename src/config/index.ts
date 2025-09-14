@@ -1,0 +1,6 @@
+export const PORT = process.env.PORT || 6678;
+export const HOST = process.env.HOST || "localhost";
+export const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  "c74bc99c9c80cff400df59495a1e4360f2fed9d215df150922881e43ef89abe478b12840ab31e45878fe6ffd2248a0e578ea057081c798496d1ca304adca697c96441a4a9bac4fe6be6d96fe42b6e3f761000317f907aa1e8d822a0ff64c8a7dcf669c4dcfd728d7f729c2e5054fd3606d99423e15114434186c0f98636442cba74bfeb25d3a00b1e67ac025e85487ce0b0e9d6a6ca7e8dcbba860a8e5890eb7a66a34f38db7a86ce7686f138a44b51d9b59fdb3651dca14474bb8a17bec5b8ed1e3b9db5c86a076d4fc6e30fe1cb538906a00fe85f7fafd726115783695b1b265924ea95cf731f8ec1c4dfb16ed8ca9a7091e4ca69dc2d57c3b12c18d64d69a";
+export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "10m";
