@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `students` MODIFY `status` ENUM('ACTIVE', 'INACTIVE', 'PENDING') NOT NULL DEFAULT 'ACTIVE';

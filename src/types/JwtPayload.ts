@@ -1,8 +1,8 @@
 export interface JWTPayload {
   id: number;
-  name: string;
+  firstName: string;
   email: string;
-  role: string;
+  roleId: number;
   iat?: number;
   exp?: number;
 }

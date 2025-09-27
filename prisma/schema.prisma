@@ -19,6 +19,7 @@ datasource db {
 enum Status {
   ACTIVE
   INACTIVE
+  PENDING
 }
 
 enum PaymentStatus {
@@ -40,19 +41,22 @@ model Role {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String    @unique
-  password  String
-  avatarUrl String?
-  roleId    Int
-  role      Role      @relation(fields: [roleId], references: [id])
-  lastLogin DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Student   Student[]
-  Teacher   Teacher[]
+  id          Int       @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  password    String
+  avatarUrl   String?
+  dateOfBirth DateTime
+  phone       String
+  address     String
+  roleId      Int
+  role        Role      @relation(fields: [roleId], references: [id])
+  lastLogin   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Student     Student[]
+  Teacher     Teacher[]
 
   @@map("Users")
 }
@@ -60,31 +64,29 @@ model User {
 model Student {
   id             Int              @id @default(autoincrement())
   userId         Int
-  user           User             @relation(fields: [userId], references: [id])
-  dateOfBirth    DateTime
-  phone          String
-  address        String
-  enrollmentDate DateTime
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollmentDate DateTime         @default(now())
   status         Status           @default(ACTIVE)
   Registration   Registration[]
   TaskSubmission TaskSubmission[]
 
+  @@index([status])
   @@map("Students")
 }
 
 model Teacher {
   id              Int      @id @default(autoincrement())
   userId          Int
-  user            User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   specialization  String
   bio             String?
   experienceYears Int
-  phone           String
   linkedinUrl     String?
-  status          Status   @default(ACTIVE)
-  hiredAt         DateTime
+  hiredAt         DateTime @default(now())
+  status          Status   @default(PENDING)
   course          Course[]
 
+  @@index([status])
   @@map("Teachers")
 }
 
@@ -105,9 +107,9 @@ model Course {
   description  String?
   price        Float
   teacherId    Int
-  teacher      Teacher        @relation(fields: [teacherId], references: [id])
+  teacher      Teacher        @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   categoryId   Int
-  category     Category       @relation(fields: [categoryId], references: [id])
+  category     Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   lesson       Lesson[]
   Registration Registration[]
   Task         Task[]
@@ -123,7 +125,7 @@ model Lesson {
   content   String?
   order     Int
   courseId  Int
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Task      Task[]
@@ -134,9 +136,9 @@ model Lesson {
 model Registration {
   id               Int           @id @default(autoincrement())
   studentId        Int
-  student          Student       @relation(fields: [studentId], references: [id])
+  student          Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
   courseId         Int
-  course           Course        @relation(fields: [courseId], references: [id])
+  course           Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
   paymentStatus    PaymentStatus @default(PENDING)
   status           Status        @default(ACTIVE)
   registrationDate DateTime      @default(now())
@@ -147,9 +149,9 @@ model Registration {
 model Task {
   id             Int              @id @default(autoincrement())
   courseId       Int
-  course         Course           @relation(fields: [courseId], references: [id])
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   lessonId       Int
-  lesson         Lesson           @relation(fields: [lessonId], references: [id])
+  lesson         Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   title          String
   description    String?
   dueDate        DateTime
@@ -163,9 +165,9 @@ model Task {
 model TaskSubmission {
   id            Int      @id @default(autoincrement())
   taskId        Int
-  task          Task     @relation(fields: [taskId], references: [id])
+  task          Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   studentId     Int
-  student       Student  @relation(fields: [studentId], references: [id])
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   submissionUrl String
   submittedAt   DateTime @default(now())
   grade         Float?
