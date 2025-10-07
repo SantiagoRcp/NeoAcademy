@@ -8,5 +8,6 @@ const auth = new AuthController();
 
 router.post("/auth/register", zoodMiddleware(RegisterUserDto), auth.register.bind(auth));
 router.post("/auth/login", zoodMiddleware(LoginUserDto), auth.login.bind(auth));
+router.post("/auth/logout", auth.logout.bind(auth));
 
 export default router;

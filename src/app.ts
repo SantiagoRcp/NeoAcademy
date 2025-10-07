@@ -7,7 +7,8 @@ import { limiter } from "./config/rateLimit";
 import morgan from "morgan";
 import helmet from "helmet";
 import authRoutes from "./modules/auth/auth.routes";
-import userRotes from "./modules/users/user.routes";
+import userRoutes from "./modules/users/user.routes";
+import adminRoutes from "./modules/admin/admin.routes";
 import { errorMiddleware } from "./middlewares/errorMiddlewar";
 import cookieParser from "cookie-parser";
 
@@ -28,7 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1", authRoutes);
-app.use("/api/v1", userRotes);
+app.use("/api/v1", userRoutes);
+app.use("/api/v1", adminRoutes);
 
 app.use((req, res) => {
   return res.status(404).json({ message: "Route Not Found", status: 404 });

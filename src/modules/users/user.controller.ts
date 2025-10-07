@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import logger from "../../config/logger.config";
 import { UserServices } from "./user.service";
 import { AppError } from "../../utils/AppErrro";
+import { IUserUpadate } from "./user.dto";
 
 export class UserController {
   private userService: UserServices;
@@ -14,7 +15,7 @@ export class UserController {
     try {
       const id = req.user?.id;
 
-      if (!id) {
+      if (!id || isNaN(id)) {
         throw new AppError(400, "Invalid User id");
       }
 
@@ -22,6 +23,38 @@ export class UserController {
       return res.status(200).json({ message: "profile obtained successfully", profile });
     } catch (error) {
       logger.error(`Error Getting Profile. Error: ${error}`);
+      next(error);
+    }
+  }
+
+  async updateUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = req.body as IUserUpadate;
+      const id = req.user?.id;
+
+      if (!id || isNaN(id)) {
+        throw new AppError(400, "Invalid User id");
+      }
+
+      const userUpdated = await this.userService.update(id, data);
+      return res.status(200).json({ message: "User updated successfully", userUpdated });
+    } catch (error) {
+      logger.error(`Error Update user. Error: ${error}`);
+      next(error);
+    }
+  }
+
+  async suspendAccount(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.user?.id;
+      if(!id || isNaN(id)){
+        throw new AppError(400,'Invalid User id');
+      }
+
+      const accountSuspended = await this.userService.suspendAccount(id);
+      return res.status(200).json(accountSuspended)
+    } catch (error) {
+      logger.error(`Error suspend Account ${error}`);
       next(error);
     }
   }

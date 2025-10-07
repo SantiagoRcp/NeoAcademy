@@ -1,6 +1,7 @@
 import { AppError } from "../../utils/AppErrro";
+import { IUserUpadate } from "./user.dto";
 import { UserRepository } from "./user.repository";
-import { IUser } from "./user.types";
+import { IUpdateuser, IUser } from "./user.types";
 
 export class UserServices {
   private userRepo: UserRepository;
@@ -17,5 +18,13 @@ export class UserServices {
     return userProfile;
   }
 
-  async getAllUsers() {}
+  async update(id: number, data: IUserUpadate): Promise<IUpdateuser> {
+    const userUpdate = await this.userRepo.updateUserData(id, data);
+    return userUpdate;
+  }
+
+  async suspendAccount(id: number) {
+    const accountSuspended = await this.userRepo.suspendAccount(id);
+    return accountSuspended;
+  }
 }

@@ -6,7 +6,10 @@ import { authMiddleware } from "../../middlewares/authMiddleware";
 const router = Router();
 const user = new UserController();
 
-router.get("/getUser", user.findUserByEmail.bind(user));
-router.get("/user/me", authMiddleware, user.getProfile.bind(user));
+router.use(authMiddleware);
+
+router.get("/user/me", user.getProfile.bind(user));
+router.post("/user/update", user.updateUser.bind(user));
+router.put("/user/suspend-account", user.suspendAccount.bind(user));
 
 export default router;

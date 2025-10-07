@@ -12,8 +12,12 @@ export interface IUser {
   updatedAt: Date;
 }
 
-
-
-
-
-
+export interface IUpdateuser {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+  avatarUrl?: string | null;
+  dateOfBirth: Date;
+  phone?: string;
+  address: string;
+}

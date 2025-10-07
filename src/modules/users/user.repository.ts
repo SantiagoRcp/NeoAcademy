@@ -1,8 +1,14 @@
 import { prisma } from "../../config/prisma";
+import { AppError } from "../../utils/AppErrro";
+import { IUserUpadate } from "./user.dto";
+import { IUpdateuser, IUser } from "./user.types";
 
 export class UserRepository {
-  async findUserByEmail(email: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
+  async getUserId(id: number): Promise<IUser> {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new AppError(400, "User not found");
+    }
     return user;
   }
 
@@ -25,5 +31,38 @@ export class UserRepository {
     });
 
     return user;
+  }
+
+  async updateUserData(id: number, data: IUserUpadate): Promise<IUpdateuser> {
+    const { firstName, lastName, password, avatarUrl, phone, address, dateOfBirth } = data;
+    const upadateUser = await prisma.user.update({
+      where: { id },
+      data: { firstName, lastName, password, avatarUrl, phone, address, dateOfBirth },
+    });
+
+    return upadateUser;
+  }
+
+  async suspendAccount(id: number) {
+    const accountSuspended = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.update({ where: { id }, data: { active: "INACTIVE" } });
+
+      if (user.roleId === 2) {
+        await tx.student.updateMany({ where: { userId: user.id }, data: { status: "INACTIVE" } });
+      }
+
+      if (user.roleId === 3) {
+        await tx.teacher.updateMany({ where: { userId: user.id }, data: { status: "INACTIVE" } });
+      }
+
+      const fullName = user.firstName + " " + user.lastName;
+
+      return {
+        message: "Account suspended",
+        user: { id: user.id, fullName, email: user.email, status: user.active },
+      };
+    });
+
+    return accountSuspended;
   }
 }

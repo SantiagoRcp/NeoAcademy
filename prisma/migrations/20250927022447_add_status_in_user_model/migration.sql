@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `users` ADD COLUMN `active` ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE';

@@ -38,4 +38,18 @@ export class AuthController {
       next(error);
     }
   }
+
+  async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "strict",
+      });
+
+      return res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      logger.error(`Error in Logout. Error ${error}`);
+      next(error);
+    }
+  }
 }
