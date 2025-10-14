@@ -2,15 +2,14 @@ import { Router } from "express";
 import { AdminController } from "./admin.controller";
 import { authMiddleware, checkRole } from "../../middlewares/authMiddleware";
 
-const router = Router();
+const AdminRouter = Router();
 const admin = new AdminController();
 
-router.use(authMiddleware);
-router.use(checkRole([1]));
+AdminRouter.use(authMiddleware);
 
-router.get("/admin/getStudents", admin.getAllstudents.bind(admin));
-router.get("/admin/getTeachers", admin.getAllTecher.bind(admin));
-router.get("/admin/teacher-pending", admin.getTeacherPending.bind(admin));
-router.post("/admin/accept-teacher/:id", admin.acceptTeacher.bind(admin));
+AdminRouter.get("/admin/getStudents", checkRole([1]), admin.getAllstudents.bind(admin));
+AdminRouter.get("/admin/getTeachers", checkRole([1]), admin.getAllTecher.bind(admin));
+AdminRouter.get("/admin/teacher-pending", checkRole([1]), admin.getTeacherPending.bind(admin));
+AdminRouter.put("/admin/accept-teacher/:id", checkRole([1]), admin.acceptTeacher.bind(admin));
 
-export default router;
+export default AdminRouter;

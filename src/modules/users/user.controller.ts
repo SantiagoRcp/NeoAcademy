@@ -15,7 +15,7 @@ export class UserController {
     try {
       const id = req.user?.id;
 
-      if (!id || isNaN(id)) {
+      if (!id || !Number.isInteger(id)) {
         throw new AppError(400, "Invalid User id");
       }
 
@@ -30,9 +30,9 @@ export class UserController {
   async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as IUserUpadate;
-      const id = req.user?.id;
+      const id = parseInt(req.params.id);
 
-      if (!id || isNaN(id)) {
+      if (!id || Number.isInteger(id)) {
         throw new AppError(400, "Invalid User id");
       }
 
@@ -46,13 +46,14 @@ export class UserController {
 
   async suspendAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = req.user?.id;
-      if(!id || isNaN(id)){
-        throw new AppError(400,'Invalid User id');
+      const id = parseInt(req.params.id);
+
+      if (!id || Number.isInteger(id)) {
+        throw new AppError(400, "Invalid User id");
       }
 
       const accountSuspended = await this.userService.suspendAccount(id);
-      return res.status(200).json(accountSuspended)
+      return res.status(200).json(accountSuspended);
     } catch (error) {
       logger.error(`Error suspend Account ${error}`);
       next(error);

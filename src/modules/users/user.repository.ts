@@ -12,7 +12,7 @@ export class UserRepository {
     return user;
   }
 
-  async getProfile(id: number) {
+  async getProfile(id: number): Promise<IUser | null> {
     const user = await prisma.user.findUnique({
       where: { id },
       select: {

@@ -8,7 +8,10 @@ import morgan from "morgan";
 import helmet from "helmet";
 import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/users/user.routes";
-import adminRoutes from "./modules/admin/admin.routes";
+import TeacherRoutes from "./modules/teacher/teacher.routes";
+import AdminRoutes from "./modules/admin/admin.routes";
+import CourseRoutes from "./modules/courses/course.routes";
+import LessonRoutes from "./modules/lesson/lesson.routes";
 import { errorMiddleware } from "./middlewares/errorMiddlewar";
 import cookieParser from "cookie-parser";
 
@@ -30,7 +33,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1", authRoutes);
 app.use("/api/v1", userRoutes);
-app.use("/api/v1", adminRoutes);
+app.use("/api/v1", TeacherRoutes);
+app.use("/api/v1", AdminRoutes);
+app.use("/api/v1", CourseRoutes);
+app.use("/api/v1", LessonRoutes);
 
 app.use((req, res) => {
   return res.status(404).json({ message: "Route Not Found", status: 404 });

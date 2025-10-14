@@ -14,7 +14,7 @@ export class AdminController {
       const page = req.query.page ? Number(req.query.page) : 1;
       const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
 
-      if (isNaN(page) || isNaN(pageSize) || page <= 0 || pageSize <= 0) {
+      if (!Number.isInteger(page) || !Number.isInteger(pageSize) || page <= 0 || pageSize <= 0) {
         return res.status(400).json({ message: "Invalid page or pageSize" });
       }
 
@@ -31,7 +31,7 @@ export class AdminController {
       const page = req.query.page ? Number(req.query.page) : 1;
       const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
 
-      if (isNaN(page) || isNaN(pageSize) || page <= 0 || pageSize <= 0) {
+      if (!Number.isInteger(page) || !Number.isInteger(pageSize) || page <= 0 || pageSize <= 0) {
         return res.status(400).json({ message: "Invalid page or pageSize" });
       }
 
@@ -48,7 +48,7 @@ export class AdminController {
       const page = req.query.page ? Number(req.query.page) : 1;
       const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
 
-      if (isNaN(page) || isNaN(pageSize) || page <= 0 || pageSize <= 0) {
+      if (!Number.isInteger(page) || !Number.isInteger(pageSize) || page <= 0 || pageSize <= 0) {
         return res.status(400).json({ message: "Invalid page or pageSize" });
       }
 

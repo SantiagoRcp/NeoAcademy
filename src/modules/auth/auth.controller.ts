@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import logger from "../../config/logger.config";
-import { Ilogin, IUserRegister } from "./auth.types";
+import { IUserRegister } from "./auth.types";
 import { ILoginUser, IRegisterUser } from "./auth.dto";
 import { AuthService } from "./auth.service";
 

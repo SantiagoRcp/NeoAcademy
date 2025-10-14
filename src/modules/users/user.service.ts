@@ -10,7 +10,7 @@ export class UserServices {
     this.userRepo = new UserRepository();
   }
 
-  async getProfile(id: number) {
+  async getProfile(id: number): Promise<IUser> {
     const userProfile = await this.userRepo.getProfile(id);
     if (!userProfile) {
       throw new AppError(404, "User not found");

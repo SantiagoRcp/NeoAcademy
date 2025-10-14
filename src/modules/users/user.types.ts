@@ -3,21 +3,13 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
+  // password?: string;
   avatarUrl?: string | null;
   phone: string;
-  roleId: number;
+  // roleId: number;
   lastLogin?: Date | null;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
-export interface IUpdateuser {
-  firstName?: string;
-  lastName?: string;
-  password?: string;
-  avatarUrl?: string | null;
-  dateOfBirth: Date;
-  phone?: string;
-  address: string;
-}
+export interface IUpdateuser extends Partial<IUser> {}

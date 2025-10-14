@@ -1,5 +1,5 @@
 import { prisma } from "../../config/prisma";
-import { ILoginUser, IRegisterUser } from "../auth/auth.dto";
+import { IRegisterUser } from "../auth/auth.dto";
 import { IUser } from "../users/user.types";
 import { IStudent } from "../student/student.types";
 import { ITeacher } from "../teacher/teacher.types";
@@ -39,6 +39,18 @@ export class AuthRepository {
           roleId: data.roleId,
           lastLogin: data.lastLogin,
         },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          avatarUrl: true,
+          dateOfBirth: true,
+          phone: true,
+          address: true,
+          role: true,
+          createdAt: true,
+        },
       });
 
       if (data.student) {
@@ -56,7 +68,7 @@ export class AuthRepository {
             specialization: data.teacher?.specialization,
             bio: data.teacher?.bio,
             experienceYears: data.teacher?.experienceYears,
-            linkedinUrl: data.teacher?.linkedinurl,
+            linkedinUrl: data.teacher?.linkedinUrl,
           },
         });
       }
