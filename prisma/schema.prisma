@@ -76,6 +76,7 @@ model Student {
   Registration   Registration[]
   TaskSubmission TaskSubmission[]
 
+  @@index([userId])
   @@index([status])
   @@map("Students")
 }

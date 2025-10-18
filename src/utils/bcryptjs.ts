@@ -1,4 +1,4 @@
-import bcrypt, { compare } from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 export async function hashedPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(15);

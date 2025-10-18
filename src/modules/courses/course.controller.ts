@@ -9,17 +9,6 @@ export class CourseController {
     this.courseServ = new CourseService();
   }
 
-  async createCourse(req: Request, res: Response, next: NextFunction) {
-    try {
-      const dataCourse = req.body;
-      const course = await this.courseServ.createCourse(dataCourse);
-      return res.status(201).json({ message: "Course created successfully", course });
-    } catch (error) {
-      logger.error("Error creating course:", error);
-      next(error);
-    }
-  }
-
   async getCourseById(req: Request, res: Response, next: NextFunction) {
     try {
       const id = parseInt(req.params.id);
@@ -27,6 +16,20 @@ export class CourseController {
       return res.status(200).json({ message: "Course found", course });
     } catch (error) {
       logger.error("Error gtting course", error);
+      next(error);
+    }
+  }
+
+  async getCoursesByTeacherId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const teacherId = Number(req.user?.teacherId);
+      const page = req.query.page ? Number(req.query.page) : 1;
+      const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
+
+      const courses = await this.courseServ.getCoursesByTeacherId(teacherId, page, pageSize);
+      return res.status(200).json({ message: "Courses found", courses });
+    } catch (error) {
+      logger.error("Error getting courses by teacher id", error);
       next(error);
     }
   }
@@ -53,20 +56,6 @@ export class CourseController {
       return res.status(200).json({ message: "Courses", courses });
     } catch (error) {
       logger.error("Error gettin courses", error);
-      next(error);
-    }
-  }
-
-  async updatedCourse(req: Request, res: Response, next: NextFunction) {
-    try {
-      const data = req.body;
-      const courseId = parseInt(req.params.id);
-      const teacherId = Number(req.user?.id);
-
-      const upatedCourse = await this.courseServ.updatedCourse(courseId, teacherId, data);
-      return res.status(200).json({ message: "Course Correctly Updated", upatedCourse });
-    } catch (error) {
-      logger.error("Error updating course:", error);
       next(error);
     }
   }

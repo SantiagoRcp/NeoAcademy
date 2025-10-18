@@ -35,10 +35,7 @@ export class AdminService {
   }
 
   async getTeacherPending(page: number = 1, pageSize: number = 10): Promise<IGetTeachers> {
-    const { teachers, totalTeachers, totalPage, currentPage } = await this.teacherRepo.getTeacherPending(
-      page,
-      pageSize
-    );
+    const { teachers, totalTeachers, totalPage, currentPage } = await this.teacherRepo.getTeacherPending(page, pageSize);
 
     if (teachers.length === 0) {
       throw new AppError(404, "No teachers pending");
@@ -47,7 +44,7 @@ export class AdminService {
   }
 
   async acceptTeacher(id: number): Promise<Teacher> {
-    const teacher = await this.teacherRepo.getTEacherById(id);
+    const teacher = await this.teacherRepo.getTeacherById(id);
     if (!teacher) {
       throw new AppError(404, "Teacher not found.");
     }

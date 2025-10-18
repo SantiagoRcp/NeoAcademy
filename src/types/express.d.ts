@@ -5,6 +5,8 @@ namespace Express {
       roleId: number;
       firstName: string;
       email: string;
+      studentId?: number;
+      teacherId?: number;
     };
   }
 }

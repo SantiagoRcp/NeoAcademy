@@ -5,11 +5,9 @@ import { authMiddleware, checkRole } from "../../middlewares/authMiddleware";
 const AdminRouter = Router();
 const admin = new AdminController();
 
-AdminRouter.use(authMiddleware);
-
-AdminRouter.get("/admin/getStudents", checkRole([1]), admin.getAllstudents.bind(admin));
-AdminRouter.get("/admin/getTeachers", checkRole([1]), admin.getAllTecher.bind(admin));
-AdminRouter.get("/admin/teacher-pending", checkRole([1]), admin.getTeacherPending.bind(admin));
-AdminRouter.put("/admin/accept-teacher/:id", checkRole([1]), admin.acceptTeacher.bind(admin));
+AdminRouter.get("/admin/getStudents", authMiddleware, checkRole([1]), admin.getAllstudents.bind(admin));
+AdminRouter.get("/admin/get-teachers", authMiddleware, checkRole([1]), admin.getAllTecher.bind(admin));
+AdminRouter.get("/admin/teacher-pending", authMiddleware, checkRole([1]), admin.getTeacherPending.bind(admin));
+AdminRouter.put("/admin/accept-teacher/:id", authMiddleware, checkRole([1]), admin.acceptTeacher.bind(admin));
 
 export default AdminRouter;

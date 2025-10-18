@@ -5,7 +5,7 @@ import { ITeacherUpdate } from "./teacher.types";
 import { IGetTeachers } from "../admin/admin.types";
 
 export class TeacherRepository {
-  async getTEacherById(id: number): Promise<Teacher | null> {
+  async getTeacherById(id: number): Promise<Teacher | null> {
     return await prisma.teacher.findUnique({ where: { id } });
   }
 
@@ -74,4 +74,6 @@ export class TeacherRepository {
 
     return teacher;
   }
+
+  
 }

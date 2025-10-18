@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { CreateUserDto } from "../users/user.dto";
-import { CreateStudentDto } from "../student/student.dto";
+import { createStudentDto } from "../student/student.dto";
 import { CreateTeacherDto } from "../teacher/teacher.dto";
 
 export const LoginUserDto = z.object({
@@ -16,7 +16,7 @@ export const LoginUserDto = z.object({
 });
 
 export const RegisterUserDto = CreateUserDto.extend({
-  student: CreateStudentDto.optional(),
+  student: createStudentDto.optional(),
   teacher: CreateTeacherDto.optional(),
 }).superRefine((data, ctx) => {
   switch (data.roleId) {

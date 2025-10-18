@@ -9,8 +9,8 @@ export class CourseRepository {
    * @param course The course data to create.
    * @returns The created course.
    */
-  async createCourse(course: CreateCourseDto): Promise<Course> {
-    const { title, description, price, teacherId, categoryId } = course;
+  async createCourse(teacherId: number, course: CreateCourseDto): Promise<Course> {
+    const { title, description, price, categoryId } = course;
     return await prisma.course.create({
       data: { title, description, price, teacherId, categoryId, createdAt: new Date() },
     });
@@ -23,6 +23,24 @@ export class CourseRepository {
    */
   async getCourseById(id: number, includeLessons: boolean): Promise<Course | null> {
     return await prisma.course.findUnique({ where: { id }, include: { lesson: includeLessons } });
+  }
+
+  /**
+   * Retrieves all courses by a specific teacher with pagination.
+   * @param teacherId the id of the teacher.
+   * @param page the page number to retrieve.
+   * @param pageSize the number of courses per page.
+   * @returns an object containing the courses and pagination information.
+   */
+  async getCoursesByTeacherId(teacherId: number, page: number, pageSize: number): Promise<IGetCourses> {
+    const skip = (page - 1) * pageSize;
+    const [courses, totalCourses] = await prisma.$transaction([
+      prisma.course.findMany({ where: { teacherId }, skip, take: pageSize, orderBy: { createdAt: "desc" } }),
+      prisma.course.count({ where: { teacherId } }),
+    ]);
+
+    const totalPage = Math.ceil(totalCourses / pageSize);
+    return { courses, totalCourses, totalPage, currentPage: page };
   }
 
   /**

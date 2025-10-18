@@ -1,6 +1,6 @@
 import { Course } from "@prisma/client";
 import { CourseRepository } from "./course.reposytory";
-import { CreateCourseDto, UpdateCourseDto } from "./course.dto";
+import {  UpdateCourseDto } from "./course.dto";
 import { IGetCourses } from "./course.types";
 import { AppError } from "../../utils/AppErrro";
 
@@ -11,9 +11,9 @@ export class CourseService {
     this.courseRepo = new CourseRepository();
   }
 
-  async createCourse(course: CreateCourseDto): Promise<Course> {
-    return await this.courseRepo.createCourse(course);
-  }
+  // async createCourse(course: CreateCourseDto): Promise<Course> {
+  //   return await this.courseRepo.createCourse(course);
+  // }
 
   async getCourseById(id: number, includeLessons: boolean = false): Promise<Course> {
     const course = await this.courseRepo.getCourseById(id, includeLessons);
@@ -23,6 +23,10 @@ export class CourseService {
     }
 
     return course;
+  }
+
+  async getCoursesByTeacherId(teacherId: number, page: number, pageSize: number): Promise<IGetCourses> {
+    return await this.courseRepo.getCoursesByTeacherId(teacherId, page, pageSize);
   }
 
   async getAllCourses(page: number, pageSize: number): Promise<IGetCourses> {

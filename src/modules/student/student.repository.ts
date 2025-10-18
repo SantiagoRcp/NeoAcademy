@@ -6,6 +6,7 @@ export class StudentRepository {
   async getStudenById(id: number): Promise<Student | null> {
     return await prisma.student.findUnique({ where: { id } });
   }
+
   async getAllStudents(page: number, pageSize: number): Promise<IGetStudents> {
     const skip = (page - 1) * pageSize;
 

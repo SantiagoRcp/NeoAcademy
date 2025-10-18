@@ -1,4 +1,5 @@
 import { AppError } from "../../utils/AppErrro";
+import { hashedPassword } from "../../utils/bcryptjs";
 import { IUserUpadate } from "./user.dto";
 import { UserRepository } from "./user.repository";
 import { IUpdateuser, IUser } from "./user.types";
@@ -18,7 +19,13 @@ export class UserServices {
     return userProfile;
   }
 
-  async update(id: number, data: IUserUpadate): Promise<IUpdateuser> {
+  async updateUser(id: number, data: IUserUpadate): Promise<IUpdateuser> {
+    if (data.password) {
+      let hasPassword;
+      hasPassword = await hashedPassword(data.password);
+      data.password = hasPassword;
+    }
+
     const userUpdate = await this.userRepo.updateUserData(id, data);
     return userUpdate;
   }
@@ -26,5 +33,19 @@ export class UserServices {
   async suspendAccount(id: number) {
     const accountSuspended = await this.userRepo.suspendAccount(id);
     return accountSuspended;
+  }
+
+  async reactivateAccount(email: string) {
+    const user = await this.userRepo.getUserByEmail(email);
+
+    if (!user) {
+      throw new AppError(404, "User no found");
+    }
+
+    if (user.active === "ACTIVE") {
+      throw new AppError(400, "Your acount is active.");
+    }
+
+    return await this.userRepo.reactivateAccount(user.id);
   }
 }

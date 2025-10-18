@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import logger from "../../config/logger.config";
 import { UserServices } from "./user.service";
 import { AppError } from "../../utils/AppErrro";
-import { IUserUpadate } from "./user.dto";
+import { IUserUpadate, IReactivateAcount } from "./user.dto";
 
 export class UserController {
   private userService: UserServices;
@@ -32,11 +32,11 @@ export class UserController {
       const data = req.body as IUserUpadate;
       const id = parseInt(req.params.id);
 
-      if (!id || Number.isInteger(id)) {
+      if (!id || !Number.isInteger(id)) {
         throw new AppError(400, "Invalid User id");
       }
 
-      const userUpdated = await this.userService.update(id, data);
+      const userUpdated = await this.userService.updateUser(id, data);
       return res.status(200).json({ message: "User updated successfully", userUpdated });
     } catch (error) {
       logger.error(`Error Update user. Error: ${error}`);
@@ -48,7 +48,7 @@ export class UserController {
     try {
       const id = parseInt(req.params.id);
 
-      if (!id || Number.isInteger(id)) {
+      if (!id || !Number.isInteger(id)) {
         throw new AppError(400, "Invalid User id");
       }
 
@@ -56,6 +56,18 @@ export class UserController {
       return res.status(200).json(accountSuspended);
     } catch (error) {
       logger.error(`Error suspend Account ${error}`);
+      next(error);
+    }
+  }
+
+  async reactivateAccount(req: Request, res: Response, next: NextFunction) {
+    try {
+      const email = String(req.body.email as IReactivateAcount);
+
+      const reactivateAccount = await this.userService.reactivateAccount(email);
+      return res.status(200).json({ message: "Acount reactivated successfully", reactivateAccount });
+    } catch (error) {
+      logger.error(`Error reacivate Account ${error}`);
       next(error);
     }
   }

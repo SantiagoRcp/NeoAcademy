@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../utils/AppErrro";
-import logger from "../config/logger.config";
 import z from "zod";
 
 export function zoodMiddleware(schemaUser: z.ZodSchema<any>) {
@@ -18,7 +17,7 @@ export function zoodMiddleware(schemaUser: z.ZodSchema<any>) {
       req.body = result.data;
       next();
     } catch (error) {
-      next(new AppError(500, "Internal Server Error Zood"));
+      next(new AppError(500, `Internal Server Error Zood ${error}`));
     }
   };
 }

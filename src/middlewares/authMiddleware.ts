@@ -8,8 +8,15 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   const token = req.cookies.token;
   if (!token) {
     logger.warn("No token provided in request");
-    return new AppError(401, "Authentication failed: No token provided");
+    return next(new AppError(401, "Authentication failed: No token provided"));
   }
+
+  jwt.verify(token, JWT_SECRET, (err: jwt.VerifyErrors | null) => {
+    if (err) {
+      logger.warn("Invalid token", { error: err });
+      return next(new AppError(401, "Authentication failed: Invalid token"));
+    }
+  });
 
   const decodedToken: any = jwt.verify(token, JWT_SECRET);
   req.user = decodedToken;

@@ -7,12 +7,33 @@ import { AppError } from "../../utils/AppErrro";
 
 export class AuthRepository {
   async login(email: string) {
-    const userLogin = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
       select: { id: true, firstName: true, email: true, password: true, roleId: true },
     });
 
-    return userLogin;
+    if (!user) {
+      throw new AppError(404, "User no found.");
+    }
+
+    switch (user.roleId) {
+      case 1:
+        return { user };
+
+      case 2:
+        const student = await prisma.student.findFirst({
+          where: { userId: user.id },
+          select: { id: true, status: true },
+        });
+        return { user, student };
+
+      case 3:
+        const teacher = await prisma.teacher.findFirst({
+          where: { userId: user.id },
+          select: { id: true, status: true },
+        });
+        return { user, teacher };
+    }
   }
 
   async registerUser(data: IRegisterUser): Promise<{ user: IUser; student?: IStudent; teacher?: ITeacher }> {
@@ -48,8 +69,10 @@ export class AuthRepository {
           dateOfBirth: true,
           phone: true,
           address: true,
+          active: true,
           role: true,
           createdAt: true,
+          updatedAt: true,
         },
       });
 

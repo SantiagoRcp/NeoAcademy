@@ -13,12 +13,13 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body as ILoginUser;
+
       const data = await this.authService.login({ email, password });
-      const { token, user } = data;
+      const { token, dataUser, student, teacher } = data;
 
       res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
 
-      return res.status(200).json({ message: "Successful login", user });
+      return res.status(200).json({ message: "Successful login", dataUser, student, teacher });
     } catch (error) {
       logger.error(`Error in login. Error: ${error}`);
       next(error);
@@ -29,7 +30,6 @@ export class AuthController {
     try {
       const data = req.body as IRegisterUser;
 
-      //   logger.info(data);
       const user: IUserRegister = await this.authService.registerUser(data);
 
       return res.status(200).json({ message: "User successfully registered.", user });
