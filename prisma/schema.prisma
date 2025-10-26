@@ -99,7 +99,7 @@ model Teacher {
 
 model Category {
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String 
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -160,7 +160,7 @@ model Task {
   lessonId       Int
   lesson         Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   title          String
-  description    String?
+  description    String
   dueDate        DateTime
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt

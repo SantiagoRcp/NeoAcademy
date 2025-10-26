@@ -13,6 +13,9 @@ import TeacherRoutes from "./modules/teacher/teacher.routes";
 import AdminRoutes from "./modules/admin/admin.routes";
 import CourseRoutes from "./modules/courses/course.routes";
 import LessonRoutes from "./modules/lesson/lesson.routes";
+import TaskRouter from "./modules/tasks/task.routes";
+import RegistrationRouter from "./modules/registrations/registrations.routes";
+import CategoryRouter from "./modules/registrations/registrations.routes";
 import { errorMiddleware } from "./middlewares/errorMiddlewar";
 import cookieParser from "cookie-parser";
 
@@ -39,6 +42,9 @@ app.use("/api/v1", TeacherRoutes);
 app.use("/api/v1", AdminRoutes);
 app.use("/api/v1", CourseRoutes);
 app.use("/api/v1", LessonRoutes);
+app.use("/api/v1", TaskRouter);
+app.use("/api/v1", CategoryRouter);
+app.use("/api/v1", RegistrationRouter);
 
 app.use((req, res) => {
   return res.status(404).json({ message: "Route Not Found", status: 404 });

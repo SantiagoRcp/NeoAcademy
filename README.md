@@ -35,7 +35,7 @@ NeoAcademy es una plataforma backend académica diseñada para gestionar de mane
 1. Clona el repositorio:
 
 ```bash
-git clone [url-del-repositorio]
+git clone https://github.com/SantiagoRcp/NeoAcademy
 cd NeoAcademy
 ```
 
