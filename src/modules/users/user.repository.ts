@@ -22,10 +22,9 @@ export class UserRepository {
   }
 
   async updateUserData(id: number, data: IUserUpadate): Promise<IUpdateuser> {
-    const { firstName, lastName, password, avatarUrl, phone, address, dateOfBirth } = data;
     const upadateUser = await prisma.user.update({
       where: { id },
-      data: { firstName, lastName, password, avatarUrl, phone, address, dateOfBirth },
+      data,
     });
 
     return upadateUser;

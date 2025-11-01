@@ -1,6 +1,7 @@
-import { Task } from "@prisma/client";
+import { Task, TaskSubmission } from "@prisma/client";
 import { prisma } from "../../config/prisma";
 import { CreateTask, UpdatedTask } from "./task.dto";
+import { gradeTask, SubmitTask } from "./task.types";
 
 export class TaskRepository {
   async createTask(data: CreateTask): Promise<Task> {
@@ -25,5 +26,18 @@ export class TaskRepository {
 
   async deletedTask(id: number): Promise<Task> {
     return prisma.task.delete({ where: { id } });
+  }
+
+  // Subir tareas
+  async taskSubmission(task: SubmitTask): Promise<TaskSubmission> {
+    return await prisma.taskSubmission.create({ data: task });
+  }
+
+  // Calificar Tarea
+  async gradeTask(gradeTask: gradeTask, taskId: number) {
+    return await prisma.taskSubmission.update({
+      where: { id: taskId },
+      data: { grade: gradeTask.grade, feedback: gradeTask.feedback },
+    });
   }
 }

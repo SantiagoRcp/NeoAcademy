@@ -36,6 +36,8 @@ export class UserController {
         throw new AppError(400, "Invalid User id");
       }
 
+      req.body.avatarUrl = `  /uploads/${req.file?.filename}`;
+
       const userUpdated = await this.userService.updateUser(id, data);
       return res.status(200).json({ message: "User updated successfully", userUpdated });
     } catch (error) {

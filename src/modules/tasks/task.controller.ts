@@ -3,6 +3,7 @@ import { TaskService } from "./task.service";
 import logger from "../../config/logger.config";
 import { CreateTask, UpdatedTask } from "./task.dto";
 import { AppError } from "../../utils/AppErrro";
+import { gradeTask } from "./task.types";
 
 export class TaskController {
   private taskServ: TaskService;
@@ -94,6 +95,45 @@ export class TaskController {
 
       const task = await this.taskServ.deletedTask(id);
       return res.status(200).json({ message: "Task deleted Successfully.", task });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Subir tareas
+  async taskSubmission(req: Request, res: Response, next: NextFunction) {
+    try {
+      const studentId = req.user?.studentId;
+      const taskId = Number(req.params.taskId);
+
+      if (!studentId) {
+        throw new AppError(400, "Student id is required.");
+      }
+
+      if (!req.file) {
+        throw new AppError(400, "The task file is required.");
+      }
+      const submissionUrl = `/uploads/${req.file?.filename}`;
+      const task = {
+        taskId,
+        studentId,
+        submissionUrl,
+      };
+
+      const submitTask = await this.taskServ.taskSubmission(task);
+      return res.status(200).json({ message: "Assignment submitted successfully", submitTask });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async gradeTask(req: Request, res: Response, next: NextFunction) {
+    try {
+      const taskId = Number(req.params.taskId);
+      const gradeTask = req.body as gradeTask;
+
+      const taskGrade = await this.taskServ.gradeTask(gradeTask, taskId);
+      return res.status(200).json({message:"", taskGrade});
     } catch (error) {
       next(error);
     }

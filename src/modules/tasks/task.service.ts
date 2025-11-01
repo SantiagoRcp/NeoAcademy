@@ -4,6 +4,7 @@ import { CourseRepository } from "../courses/course.reposytory";
 import { LessonRepository } from "../lesson/lesson.repository";
 import { CreateTask, UpdatedTask } from "./task.dto";
 import { TaskRepository } from "./task.repository";
+import { gradeTask, SubmitTask } from "./task.types";
 
 export class TaskService {
   private taskRepo: TaskRepository;
@@ -78,5 +79,24 @@ export class TaskService {
   async deletedTask(id: number): Promise<Task> {
     const task = await this.getTaskbyId(id);
     return await this.taskRepo.deletedTask(task.id);
+  }
+
+  // Subir Tareas
+  async taskSubmission(task: SubmitTask) {
+    const taskExist = await this.getTaskbyId(task.taskId);
+
+    if (taskExist) {
+      return await this.taskRepo.taskSubmission(task);
+    }
+  }
+
+  // Calificar Tarea
+  async gradeTask(gradeTask: gradeTask, taskId: number) {
+    const task = await this.getTaskbyId(taskId);
+
+    if (task) {
+      const grade = await this.taskRepo.gradeTask(gradeTask, taskId);
+      return grade;
+    }
   }
 }

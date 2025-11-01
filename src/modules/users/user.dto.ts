@@ -12,7 +12,7 @@ export const CreateUserDto = z.object({
     )
     .min(8, "password must be at least 8 characters long")
     .trim(),
-  avatarUrl: z.string().url("Invalid URL").trim().optional(),
+  // avatarUrl: z.string().url("Invalid URL").trim().optional(),
   dateOfBirth: z.string(),
   phone: z.string().min(10, "phone is required").trim(),
   address: z.string().min(1, "address is required").trim(),

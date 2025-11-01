@@ -8,7 +8,13 @@ export const createTasktDto = z.object({
   dueDate: z.coerce.date(),
 });
 
+export const gradeTaskDto = z.object({
+  grade: z.number().int().positive().min(1, "Grade is required."),
+  feedback: z.string().min(3, "feedback is required.").trim(),
+});
+
 export const updatedTaskDto = createTasktDto.partial();
 
 export type CreateTask = z.infer<typeof createTasktDto>;
 export type UpdatedTask = z.infer<typeof updatedTaskDto>;
+export type GradeTask = z.infer<typeof gradeTaskDto>;

@@ -14,10 +14,7 @@ export class AuthService {
   }
 
   async login(data: ILoginUser) {
-    // console.log(data);
     const loginUser = await this.authRepo.login(data.email);
-
-    // console.log(loginUser);
 
     if (!loginUser) {
       throw new AppError(400, "User not found");

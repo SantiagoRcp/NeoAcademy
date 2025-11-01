@@ -3,6 +3,7 @@ config();
 
 import express from "express";
 import cors from "cors";
+import path from "node:path";
 import { limiter } from "./config/rateLimit";
 import morgan from "morgan";
 import helmet from "helmet";
@@ -29,6 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
+
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 // Rutas
 app.get("/", (req, res) => {
